@@ -28,15 +28,23 @@ func main(){
         //}else{
         //        fmt.Println("数据被篡改")
         //}
+	
+
+	//密钥
+	key,_ := MakeNewKey("he21412412125fwwggegwegwgewgwgwegwegewgewgewwdsvsshgvdvjykktykdsgsx")
+
 
 	sakecoin := NewChain()
-	sakecoin.SetLevel(3)
+	sakecoin.SetLevel(1)
 	t1 := NewTransaction("add1","add2","10")
+	t1.sign(key)
+	//t1.amount = "20" 篡改数据会被检验
+	fmt.Println(t1.isValid(key))
 	t2 := NewTransaction("add2","add1","5")
-	sakecoin.addTransaction(t1)
-	sakecoin.addTransaction(t2)
+	sakecoin.addTransaction(t1,key)
+	sakecoin.addTransaction(t2,key)
 	fmt.Println(*sakecoin)
 
-	sakecoin.mineTransactionPool("add3")
+	sakecoin.mineTransactionPool("add3",key)
 	fmt.Println(*sakecoin)
 }

@@ -2,6 +2,7 @@ package main
 
 import(
 	"strconv"
+	"fmt"
 )
 
 type Chain struct{
@@ -29,26 +30,26 @@ func (this *Chain)getlastBlock() Block {
 	return this.chain[len(this.chain) - 1]
 }
 
-func (this *Chain)addBlockToChain(newBlock *Block){
+func (this *Chain)addBlockToChain(newBlock *Block,key *GKey){
 	newBlock.previousHash = this.getlastBlock().hash
 	//newBlock.hash = newBlock.computeHash()
-	newBlock.mine(this.level)
+	newBlock.mine(this.level,key)
 	this.chain = append(this.chain,*newBlock)
 }
 
-func (this *Chain)mineTransactionPool(minerAddress string){
+func (this *Chain)mineTransactionPool(minerAddress string,key *GKey){
 	//发放矿工奖励
 	transaction := NewTransaction("",minerAddress,strconv.Itoa(this.mineReward))
 	this.transactionPool = append(this.transactionPool,transaction)
 	//挖矿
 	newBlock := NewBlock(this.transactionPool,this.getlastBlock().hash)
-	newBlock.mine(this.level)
+	newBlock.mine(this.level,key)
 	//添加区块到区块链
 	this.chain = append(this.chain,*newBlock)
 	this.transactionPool = []Transaction{}
 }
 
-func (this *Chain)validataChain() bool {
+func (this *Chain)validataChain(key *GKey) bool {
 	if 1 == len(this.chain){
 		if this.chain[0].hash != this.chain[0].computeHash() {
 			return false
@@ -57,6 +58,10 @@ func (this *Chain)validataChain() bool {
 	}
 	for i:= 1;i < len(this.chain);i++{
 		blockToValidata := this.chain[i]
+		if !blockToValidata.validataBlockTransactions(key) {
+			fmt.Println("发现非法交易")
+			return false
+		}
 		if blockToValidata.hash != blockToValidata.computeHash() {
 			return false
 		}
@@ -72,6 +77,11 @@ func (this *Chain)SetLevel(_level int){
 	this.level = _level
 }
 
-func (this *Chain)addTransaction(transaction Transaction){
+func (this *Chain)addTransaction(transaction Transaction,key *GKey){
+	if !transaction.isValid(key){
+		fmt.Println("invalid transaction")
+		return
+	}
+	fmt.Println("valid transaction")
 	this.transactionPool = append(this.transactionPool,transaction)
 }

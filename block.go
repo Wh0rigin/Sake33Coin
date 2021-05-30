@@ -36,7 +36,10 @@ func (this *Block)getAnswer(level int) string {
 	return answer
 }
 
-func (this *Block)mine(level int){
+func (this *Block)mine(level int,key *GKey){
+	if !this.validataBlockTransactions(key){
+		return
+	}
 	for{
 		this.hash = this.computeHash()
 		if this.hash[0:level] != this.getAnswer(level){
@@ -48,4 +51,14 @@ func (this *Block)mine(level int){
 		}
 	}
 	fmt.Println("挖矿获得:",this.hash)
+}
+
+func (this *Block)validataBlockTransactions(key *GKey) bool {
+	for _,transaction := range this.data {
+		if false == transaction.isValid(key) {
+			fmt.Println("invalid transaction found in transactions:发现异常交易")
+			return false
+		}
+	}
+	return true
 }
