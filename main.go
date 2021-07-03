@@ -1,11 +1,12 @@
 package main
 
-import(
+import (
 	"fmt"
+	"github.com/Wh0rigin/Sake33Coin/functions"
+	"github.com/Wh0rigin/Sake33Coin/structs"
 )
 
-
-func main(){
+func main() {
 	//block := NewBlock("转账10元","214")
 	//fmt.Println(*block)
 
@@ -23,28 +24,26 @@ func main(){
 
 	//SakeChain.chain[1].data = "转账一个亿"
 	//fmt.Println(*SakeChain)
-     	//if SakeChain.validataChain() {
-        //        fmt.Println("数据没有被篡改")
-        //}else{
-        //        fmt.Println("数据被篡改")
-        //}
-	
+	//if SakeChain.validataChain() {
+	//        fmt.Println("数据没有被篡改")
+	//}else{
+	//        fmt.Println("数据被篡改")
+	//}
 
 	//密钥
-	key,_ := MakeNewKey("he21412412125fwwggegwegwgewgwgwegwegewgewgewwdsvsshgvdvjykktykdsgsx")
+	key, _ := functions.MakeNewKey("he21412412125fwwggegwegwgewgwgwegwegewgewgewwdsvsshgvdvjykktykdsgsx")
 
-
-	sakecoin := NewChain()
+	sakecoin := structs.NewChain()
 	sakecoin.SetLevel(1)
-	t1 := NewTransaction("add1","add2","10")
-	t1.sign(key)
+	t1 := structs.NewTransaction("add1", "add2", "10")
+	t1.Sign(key)
 	//t1.amount = "20" 篡改数据会被检验
-	fmt.Println(t1.isValid(key))
-	t2 := NewTransaction("add2","add1","5")
-	sakecoin.addTransaction(t1,key)
-	sakecoin.addTransaction(t2,key)
+	fmt.Println(t1.IsValid(key))
+	t2 := structs.NewTransaction("add2", "add1", "5")
+	sakecoin.AddTransaction(t1, key)
+	sakecoin.AddTransaction(t2, key)
 	fmt.Println(*sakecoin)
 
-	sakecoin.mineTransactionPool("add3",key)
+	sakecoin.MineTransactionPool("add3", key)
 	fmt.Println(*sakecoin)
 }

@@ -1,16 +1,16 @@
-package main
+package functions
 
-import(
-	"crypto/ecdsa"
-	"log"
-	"errors"
+import (
 	"bytes"
-	"fmt"
-	"math/big"
 	"compress/gzip"
+	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/hex"
+	"errors"
+	"fmt"
+	"log"
+	"math/big"
 	"strings"
 )
 
@@ -20,10 +20,9 @@ const (
 	privKeyBytesLen    = 32
 )
 
-
-type GKey struct{
+type GKey struct {
 	privateKey *ecdsa.PrivateKey
-	PublicKey ecdsa.PublicKey
+	PublicKey  ecdsa.PublicKey
 }
 
 func MakeNewKey(randKey string) (*GKey, error) {
